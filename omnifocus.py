@@ -1,5 +1,6 @@
 import urllib.parse
 import requests
+from python_xcall import xcall
 
 """
 This module contains functions for interacting with Omnifocus
@@ -48,11 +49,10 @@ def create_task(task_name: str, task_description: str = '') -> str:
     """
     "Request" the URL to take advantage of callback functionality
     """
-    response = requests.get(url)
+    print(url)
+    # response = python-xcall.xcall(url=url)
     print("!")
 
-
-    print(url)
 
 
 if __name__ == "__main__":
