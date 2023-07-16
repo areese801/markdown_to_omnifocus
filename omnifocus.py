@@ -1,6 +1,5 @@
-import urllib.parse
-import requests
 from python_xcall import xcall
+import sys
 
 """
 This module contains functions for interacting with Omnifocus
@@ -61,9 +60,25 @@ def create_task(task_name: str, task_description: str = '') -> str:
 
     return new_task_url
 
-#
-# if __name__ == "__main__":
-#     create_task("test task2", "test description2")
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        # No arguments were passed in
+        raise ValueError("A task name needs to be passed in as a truthy string")
+    elif len(sys.argv) == 2:
+        # Task without description was passed in
+        task_name = sys.argv[1]
+        create_task(task_name=task_name)
+    elif len(sys.argv) == 3:
+        # Task with description was passed in
+        task_name = sys.argv[1]
+        task_description = sys.argv[2]
+        create_task(task_name=task_name, task_description=task_description)
+    else:
+        raise ValueError("Too many arguments were passed in.  Only a task name and description are supported.  "
+                         "Be sure to quote them if they contain spaces.")
+
+
 
 
 
