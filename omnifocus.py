@@ -26,16 +26,14 @@ def create_task(task_name: str, task_description: str = '') -> str:
 
     """
     Assemble parameters
+    'autosave=true' bypasses quick entry dialog.
     """
-    percent_encoded_task_name = urllib.parse.quote(task_name)
-    percent_encoded_task_description = urllib.parse.quote(task_description)
 
-    # 'autosave=true' bypasses quick entry dialog.
     # https://discourse.omnigroup.com/t/url-schemes-to-inbox-directly/42489/2
-    params = dict(name=percent_encoded_task_name, autosave='true')
+    params = dict(name=task_name, autosave='true')
 
     if task_description:
-        params['note'] = percent_encoded_task_description
+        params['note'] = task_description
 
     params = {k: v for k, v in params.items() if v is not None}
 
@@ -49,14 +47,23 @@ def create_task(task_name: str, task_description: str = '') -> str:
     """
     "Request" the URL to take advantage of callback functionality
     """
-    print(url)
+    print(f"Adding Task '{task_name}'\n\t{url}")
     # response = python-xcall.xcall(url=url)
-    print("!")
+    action_params=dict(name=task_name, autosave='true')
+    if task_description:
+        action_params['note'] = task_description
 
+    response = xcall.xcall(scheme='omnifocus', action='add', action_parameters=action_params)
 
+    # The response has the  URL scheme that corresponds with the new task
+    new_task_url = response['result']
+    print(f"The task was created.  It can be found at {new_task_url}")
 
-if __name__ == "__main__":
-    create_task("test task", "test description")
+    return new_task_url
+
+#
+# if __name__ == "__main__":
+#     create_task("test task2", "test description2")
 
 
 
