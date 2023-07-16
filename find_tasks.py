@@ -10,7 +10,7 @@ import uuid
 
 from config import _read_base_dir_from_config
 from parsers import parse_tasks_from_strings
-from parsers import get_todoist_front_matter_setting
+from parsers import get_omnifocus_front_matter_setting
 
 
 def _find_tasks_in_file(file_name: str):
@@ -138,10 +138,10 @@ def find_tasks(parent_directory:str = '~/Obsidian', file_ext= ".md") -> dict:
                 # print(f"Inspecting file: {long_file_name}")
 
                 # Does the frontmatter in the file indicate we should not parse for to-do items?
-                todoist_frontmatter_setting = get_todoist_front_matter_setting(input_string=long_file_name)
-                if todoist_frontmatter_setting is False:
-                    # print(f"\nSkipping over file '{long_file_name}' due to todoist frontmatter setting value: "
-                    #       f"[{todoist_frontmatter_setting}].")
+                omnifocus_frontmatter_setting = get_omnifocus_front_matter_setting(input_string=long_file_name)
+                if omnifocus_frontmatter_setting is False:
+                    # print(f"\nSkipping over file '{long_file_name}' due to omnifocus frontmatter setting value: "
+                    #       f"[{omnifocus_frontmatter_setting}].")
                     continue
 
                 tasks_from_file = _find_tasks_in_file(file_name=long_file_name)

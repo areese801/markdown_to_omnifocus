@@ -17,6 +17,8 @@ import datetime
 from datetime import timezone
 from hashing import make_task_hash
 
+from omnifocus import create_task
+
 
 def migrate_tasks(parent_directory:str = '~/Obsidian'):
 	"""
@@ -34,10 +36,7 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 		print(f"There are no tasks to migrate.  Call to find_tasks results in: {str(tasks_from_markdown_files)}")
 		return
 
-
-	# TODO:  Some way to get a list of existing tasks from Omnifocus in order to try to not duplicate them
-
-	recently_modified_files = [] #Tracks files that were modified by current invocation.  To not-skip due to modify time.
+	recently_modified_files = []  # Tracks files that were modified by current invocation.  To not-skip due to modify time.
 
 	for task_dict in tasks_from_markdown_files:
 
@@ -64,17 +63,81 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 				# We might have just modified a file due to another to-do item, thus changing its timestamp.  It's okay to modify again in this case
 				continue
 
-			# TODO:  Bump the list of existing tasks from Omnifocus up against that which is in scope right now. Not sure if this is possible with Omnifocus URL scheme
-
-
 		"""
 		Make the task in Omnifocus
 		"""
+		task_name = task_dict['task']
+		task_from_file_name = task_dict['file_name']
+		task_from_obsidian_uri = task_dict['obsidian_uri']
+
+		# Whip up a block of text to serve as the description
+		task_description = f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - \n\n"
+		task_description += f"Parsed from Obsidian file: \"{os.path.basename(task_from_file_name)}\" at the URI below:\n"
+		task_description += f"Note:  If the file has been renamed or modified in Obsidian, this link may not work\n\n"
+		task_description += f"{task_from_obsidian_uri}"
+		task_description += "\n\n---"
+
+		new_task_url = create_task(task_name=task_name, task_description=task_description)
+
+		"""
+		Construct a markdown string to replace the original with
+		"""
+		# Handle the markdown part of the task:  '- [ ] "
+		markdown_todo_regex_pattern = "(^\s*- \[)( )(\]\s*)"
+		arrow_character = "→" # Used to denote a 'migrated' task.  In markdown any char other than ' ' will signify complete.
+		task_markdown_part = task_dict['markdown_part']  # This looks like:  '- [ ]'
+		markdown_todo_regex_match = re.match(string=task_markdown_part, pattern=markdown_todo_regex_pattern)
+		re_1 = markdown_todo_regex_match.group(1) # Looks like:  - [
+		re_3 = markdown_todo_regex_match.group(3).rstrip() # Looks like:  ].  The empty space would be in group 2
+		new_task_markdown_part = f"{re_1}{arrow_character}{re_3} "
+
+		# Handle the part of the string that links to the new task in Omnifocus
+		omnifocus_link_part = f" [(This Task Migrated to Omnifocus)]({new_task_url})"
+
+		# Construct a complete line of text to replace the original to-do that was parsed from the file
+		replacement_todo_string = f"{new_task_markdown_part}~~{task_dict['task']}~~{omnifocus_link_part}"
+
+		# Print some logging stuff
+		print("\nThe program will find and replace the following:")
+		print(f"\tWithin the file '{markdown_file_name}'")
+		print(f"\tThis string will be sought:            {task_dict['original_string']}")
+		print(f"\tWhich will be replaced by the string:  {replacement_todo_string}")
+
+		"""
+		Replace the original line in the file with a to-do item on it with the new field that 
+		show's it's been migrated to todoist
+		"""
+		# Read the lines of the file first
+		with open(markdown_file_name, 'r') as f:
+			lines = f.readlines()
+
+		# Modify the lines
+		new_lines = []
+		for line in lines:
+			if line.strip().startswith(task_dict['original_string']):
+				new_lines.append(replacement_todo_string)
+			else:
+				new_lines.append(line.rstrip())  # We don't want trailing \n char or we'll get doubles when we join
+		new_file_data = "\n".join(new_lines)
+
+		# Replace the lines of the original file with the new lines
+		with open(markdown_file_name, 'w') as f:
+			f.write(new_file_data)
+			f.close()
+		recently_modified_files.append(markdown_file_name) # Helps us merge many tasks from the same file in without TS check
 
 
+if __name__ == '__main__':
 
+	# Resolve the path to the vault.  If it's not passed in, get it from the config file
+	args = sys.argv
 
-	print("!")
+	if len(args) >= 2:
+		base_dir = args[1]
+	else:
+		base_dir = _read_base_dir_from_config()
+
+	migrate_tasks(parent_directory=base_dir)
 
 if __name__ == '__main__':
 	migrate_tasks()

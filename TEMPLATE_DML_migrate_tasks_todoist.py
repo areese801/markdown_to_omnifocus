@@ -167,13 +167,6 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 		recently_modified_files.append(markdown_file_name) # Helps us merge many tasks from the same file in without TS check
 
 
-		# To Do:  Cross out the todo in the markdown file
-		# Pick back up here next time
-		# TODO:  After buttoning up the piece that would create the todoist task
-		# Modify the markdown file here.
-		# Make it create a .backup file with the original contents and a datestamp
-
-
 if __name__ == '__main__':
 
 	# Resolve the path to the vault.  If it's not passed in, get it from the config file
