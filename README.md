@@ -76,7 +76,7 @@ For Example, a Packing list template for trips might look like the below. It's a
 tags:
   - Template
   - Travel
-todoist: false
+omnifocus: false
 ---
 # Daily Clothing
 

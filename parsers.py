@@ -144,9 +144,9 @@ def parse_frontmatter(input_string: str) -> frontmatter.Post:
 
         ret_val = frontmatter.loads(text=input_string, encoding='utf-8')
     except yaml_parser.ParserError as ex:
-        print(f"Got Exception of type {type(ex)} while trying to parse the input below.  "
-              f"Continuing: \n{input_string}", file=sys.stderr)
-        print(ex, file=sys.stderr)
+        # print(f"Got Exception of type {type(ex)} while trying to parse the input below.  "
+        #       f"Continuing: \n{input_string}", file=sys.stderr)
+        # print(ex, file=sys.stderr)
         ret_val = None
 
     return ret_val

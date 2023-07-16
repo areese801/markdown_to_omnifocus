@@ -22,7 +22,7 @@ from omnifocus import create_task
 
 def migrate_tasks(parent_directory:str = '~/Obsidian'):
 	"""
-	Migrates open tasks into Omnifocus by creating a task in todoist then modifying the markdown
+	Migrates open tasks into Omnifocus by creating a task in Omnifocus then modifying the markdown
 	File / line from where the task was encountered
 	"""
 
@@ -105,7 +105,7 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 
 		"""
 		Replace the original line in the file with a to-do item on it with the new field that 
-		show's it's been migrated to todoist
+		show's it's been migrated to Omnifocus
 		"""
 		# Read the lines of the file first
 		with open(markdown_file_name, 'r') as f:
