@@ -4,6 +4,7 @@
 # Don't track Jetbrains Pycharm / Fleet stuff
 .idea/
 .fleet/
+.vscode/
 
 # Don't track .DS_Store (Mac Temp file)
 .DS_Store
