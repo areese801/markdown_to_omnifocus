@@ -2,8 +2,6 @@
 
 ###
 ### Wrapper script around find_tasks.py.  Useful for automation
-### Here, we're relying on pyenv (and thus .python-version) to point to the right python with installed requrements
-### If it's not working reliably, try running make_pyenv_venv.sh to re-create the virtual environment
 ###
 
 ## Define the docmd function
@@ -61,8 +59,9 @@ thisDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
 
 	echo "pipToUse = ${pipToUse}"
 
-## Best effor to ensure that the right packages are installed
-	${pipToUse} install -U -r ${thisDir}/requirements.txt > /dev/null 2>&1 
+## Best effort to ensure that the right packages are installed
+	# ${pipToUse} install -U -r ${thisDir}/requirements.txt > /dev/null 2>&1   # TODO:  Delete this
+	# TODO:  Make this call make_env instead
 
 
 ## Call the Find Tasks script.
