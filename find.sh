@@ -63,8 +63,9 @@ thisDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
 # 	# ${pipToUse} install -U -r ${thisDir}/requirements.txt > /dev/null 2>&1   # TODO:  Delete this
 # 	# TODO:  Make this call make_env instead
 
-## Python to use
-	pythonToUse=${thisDir}/venv/bin/python
+
+pythonToUse=${thisDir}/venv/bin/python
+echo "pythonToUse = ${pythonToUse}"
 
 ## Call the Find Tasks script.
 	program="${thisDir}/find_tasks.py"

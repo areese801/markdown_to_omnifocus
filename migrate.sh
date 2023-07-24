@@ -84,8 +84,10 @@ echo "pidFileName = ${pidFileName}"
 
 # 	echo "pipToUse = ${pipToUse}"
 
-## Best effor to ensure that the right packages are installed
-	# ${pipToUse} install -U -r ${thisDir}/requirements.txt > /dev/null 2>&1  #TODO:  Make this work with the virtual env from make_env
+# ## Best effor to ensure that the right packages are installed
+# 	# ${pipToUse} install -U -r ${thisDir}/requirements.txt > /dev/null 2>&1  #TODO:  Make this work with the virtual env from make_env
+
+pythonToUse=${thisDir}/venv/bin/python
 
 ## Python to use
 	pythonToUse=${thisDir}/venv/bin/python
