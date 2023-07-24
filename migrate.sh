@@ -89,6 +89,9 @@ echo "pidFileName = ${pidFileName}"
 
 pythonToUse=${thisDir}/venv/bin/python
 
+## Python to use
+	pythonToUse=${thisDir}/venv/bin/python
+
 ## Call the Find Tasks script.
 	program="${thisDir}/migrate_tasks.py"
 
