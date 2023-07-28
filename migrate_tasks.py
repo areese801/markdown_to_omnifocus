@@ -70,6 +70,11 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 		task_from_file_name = task_dict['file_name']
 		task_from_obsidian_uri = task_dict['obsidian_uri']
 
+		# Beautify the task name by removing [[Brackets]] from names, etc
+		re_pattern = r'(\[\[)([^]]+)(\]\])'  # Matches: [[Jamie Hepner]] and returns Jamie Hepner in group 2
+		re_replacement = r'\2'
+		task_name_no_brackets = re.sub(pattern=re_pattern, repl=re_replacement, string=task_name)
+
 		# Whip up a block of text to serve as the description
 		task_description = f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - \n\n"
 		task_description += f"Parsed from Obsidian file: \"{os.path.basename(task_from_file_name)}\" at the URI below:\n"
@@ -77,7 +82,7 @@ def migrate_tasks(parent_directory:str = '~/Obsidian'):
 		task_description += f"{task_from_obsidian_uri}"
 		task_description += "\n\n---"
 
-		new_task_url = create_task(task_name=task_name, task_description=task_description)
+		new_task_url = create_task(task_name=task_name_no_brackets, task_description=task_description)
 
 		"""
 		Construct a markdown string to replace the original with
